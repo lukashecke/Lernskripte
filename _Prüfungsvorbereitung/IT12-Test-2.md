@@ -66,7 +66,7 @@ Lösung: (2^64) / (10^11) = 5,8 Jahre;
 
 ## 2. Digitale Signatur
 
-![Alt text](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/Digitale-Signatur.heic)
+![Alt text](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/digitale-signatur.png)
 
 ## 3. Backups
 
@@ -86,7 +86,7 @@ Anschließend werden nur noch **die Änderungen zum Letzten Backup** gesichert.
 Zunächst Full-Bakup.  
 Anschließend werden nur noch **die Änderungen zum Letzten Full-Backup** gesichert.
 
-![Alt text](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/Backups.heic)
+![Alt text](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/backups.png)
 
 ### Zeitberechnung
 
