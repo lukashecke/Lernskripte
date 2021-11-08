@@ -12,7 +12,8 @@ Limit...
 
 ## Beispielabfrage
 
-Eine beispielhafte Abfrage könnte wie folgt aussehen:  
+Eine beispielhafte Abfrage könnte wie folgt aussehen:
+
 ```sql
 SELECT Name  
 FROM Mitarbeiter  
