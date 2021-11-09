@@ -88,7 +88,7 @@ SELECT AVG(Gehalt)
 FROM Mitarbeiter;
 ```
 
-## Weitere Klauseln
+## Gruppierung
 
 ### GROUP BY
 
