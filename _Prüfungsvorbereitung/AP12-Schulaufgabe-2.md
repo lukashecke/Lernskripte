@@ -25,7 +25,7 @@ WHERE f.Ort LIKE '%München%';
 ### Welcher Grohßändler beliefert die Filiale in Augsburg
 
 ```sql
-SELECT * 
+SELECT g.* 
 FROM Filiale f
 INNER JOIN beliefert b 
 ON f.Nr = b.Filiale 
