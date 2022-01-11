@@ -100,7 +100,8 @@ Reservefestplatte, die bei Ausfall einer anderen Festplatte automatischaktiv wir
 
 ## 2. Generationenprinzip
 
-Im Generationsprinzip soll
+Das Generationsprinzip (auch Großvater-Vater-Sohn-Prinzip) stellt sicher, dass immer mehrere Sicherungen in verschiedenen zeitlichen Abstufungen (Großvater, Vater, Sohn) vorhanden sind.  
+In diesem Beispiel, soll auf jede Woche und jeden Monat zurückgespielt werden können. Die Tagesbänder werden alle 7 Tage überschrieben und am Freitag wird immer das Wochenbackup eingespielt.
 
 ![Generationsprinzip](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/generationsprinzip.png)
 
