@@ -55,6 +55,8 @@ Raid 01: Erst striping, dann mirroring (striping "unten")
 
 ### RAID 6
 
+Besonders für große Festplatten-Arrays, da bei vielen Festplatten auch die wahrscheinlichkeit des Ausfalls steigt.
+
 ![RAID 6](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/raid-6.png)
 
 > Einsatz verschiedener Paritäten!
@@ -82,13 +84,10 @@ Dient zur Wiederherstellung der verlorenen Daten einer, bzw. zweier Festplatten 
 #### JBOD
 
 (= just a bunch of discs)  
-Also ein Zusammenschluss von Festplatten, der keinem klassischen Raid Level entspricht. Z.b. wenn größere Festplatte benötigt als vorhanden?
+Also ein Zusammenschluss von Festplatten, der keinem klassischen Raid Level entspricht.  
+Beispielsweise für große Datenbanken, Fileserver, etc. für die einzelnde Festplatten nicht ausreichen.
 
 ![JBOD](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/jbod.png)
-
-#### Matrix RAID
-
-Kombination aus Raid 0 und 1, die flexibel einstellbar ist.
 
 #### Hot - Swap
 
@@ -105,53 +104,120 @@ In diesem Beispiel, soll auf jede Woche und jeden Monat zurückgespielt werden k
 
 ![Generationsprinzip](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/generationsprinzip.png)
 
-> 4 Wochentage + 4 Wochen + 12 Monate = 20 Bänder
+> 4 Wochentage ([inkrementell](#wiederholung-backups)) +  
+> 4 Wochen ([full](#wiederholung-backups)) +  
+> 12 Monate ([full](#wiederholung-backups))  
+> = 20 Bänder
 
-## 3. Backups (Wiederholung)
+## 3. Firewall
 
-= Die Sicherung aller Daten auf ein **externes** Medium.
+Hard- oder Software, die anhand von Regeln Netzwerk-Verkehr erlaubt oder verbietet.
 
-### 3.1. Full Backup
+> Schütz interne Netze nur vor Angriffen aus einem externen Netz, nicht von innen!
 
-Sicherung aller Daten auf ein externes Medium.
+### Kriterien für Firewall-Regeln
 
-### 3.2. Inkrementelles Backup
+Firewall-Regeln können auf Folgendem basieren:
 
-Zunächst Full-Bakup.  
-Anschließend werden nur noch **die Änderungen zum Letzten Backup** gesichert.
+- IP Adressen ([OSI 3](#wiederholung-osi-modell))
+- Ports ([OSI 4](#wiederholung-osi-modell))
+- Domain names
+- Protokolle
+- Programme ([OSI 7](#wiederholung-osi-modell))
+- Schlüsselworter ([OSI 7](#wiederholung-osi-modell))
 
-### 3.3 Differentielles Backup
+> Paket-Filter nennt sich die Art von Firewall, die die ein- und ausgehenden Datenpakete auf der Netzwerk- und Transportebene kontrolliert. ([OSI-Schichten 3 und 4](#wiederholung-osi-modell))
 
-Zunächst Full-Bakup.  
-Anschließend werden nur noch **die Änderungen zum Letzten Full-Backup** gesichert.
+Die Firewall Regeln werden der Reihe nach abgearbeitet:
 
-![Alt text](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/backups.png)
+| Regel | Bedingung | Aktion |
+| ----- | --------- | ------ |
+| Regel 1 | ... | erlauben |
+| Regel 2 | ... | verbieten |
+| Regel 3 | ... | erlauben |
+| ... | ... | ... |
+| Regel n | ... | erlauben/ verbieten |
 
-### Zeitberechnung
+Mögliche Aktionen (Linux):
 
-Datenvolumen: 6,2 GiB  
-Datenübertragungsrate: 3 MB/s
+- Accept - lässt das Paket passieren
+- Drop - lehnt das Paket ohne Rückmeldung ab
+- Reject - lehnt das Paket ab und schickt dem Absender per ICMP die Rückmeldung *destination unreachable*
+- Log - Paket im Logfile des Systems protokollieren
 
-Lösung: (6,2 \* 1024^3 B) / (3 \* 10^6 B/s) = 2220s;
+> Die Regelprüfung findet nur bis zur 1. erfülten Bedingung statt. Diese Aktion wird dann ausgeführt und die Regelprüfung beendet.  
+> Das heißt die erste passende Regel, die auf das Paket zutrifft wird angewendet.
 
-> Formel:  
-> Benötigte Zeit = Datenvolumen / Datenübertragungsrate
+### Black- vs. Whitelist
 
-### Verfügbarkeit
+#### Blacklist
 
-> Formel:  
-> Verfügbarkeit = (Gesamtzeit - Gesamtausfallzeit) / (Gesamtzeit) \* 100%
+| Regel | Bedingung | Aktion |
+| ----- | --------- | ------ |
+| Regel 1 | ... | verbieten |
+| Regel 2 | ... | verbieten |
+| Regel 3 | ... | verbieten |
+| ... | ... | ... |
+| Letzte Regel | ... | alles (andere) erlauben |
 
-## 4. Firewall
+#### Whitelist
 
-Noch nicht unternommen...
+| Regel | Bedingung | Aktion |
+| ----- | --------- | ------ |
+| Regel 1 | ... | erlauben |
+| Regel 2 | ... | erlauben |
+| Regel 3 | ... | erlauben |
+| ... | ... | ... |
+| Letzte Regel | ... | alles (andere) verbieten |
+
+### SPI-Firewall ([OSI 4](#wiederholung-osi-modell))
+
+(= stateful \[packet\] inspection firewall)  
+Pakete werden nur reingelassen, wenn jemand von innen eine Verbindung aufgebaut hat.  
+Dies funktioniert nicht über den [TCP-Handshake](#wiederholung-tcp-handshake), sondern über Listen. Die IP-Adresse mit der kommuniziert werden soll, wird sich gemerkt, Daten davon durchgelassen und im Anschluss wird diese wider "blockiert".
+
+### Application-Layer Firewall ([OSI 7](#wiederholung-osi-modell))
+
+(o.a. Proxy-Level-Firewall)  
+Weil diese Firewall bis Schicht 7 arbeitet, kann der Dateninhalt gelesen werden.  
+Durch dieses **Content-Filtering** können zum Beispiel alle Mails mit bestimmten Spam-Inhalt blockiert werden.
+
+> Achtung!  
+> Proxy-Layer-Firewall ist nicht das selbe wie ein Proxy.  
+> Eine Proxy-Level-Firewall ist auch kein Virensacanner: Virenscanner suchen nach bestimmten Mustern, welche laufend aktualisiert werden müssen.
 
 ## Weblinks
 
 - [Seagate.com](https://www.seagate.com/de/de/manuals/network-storage/business-storage-nas-os/raid-modes/) - RAID Modi
 - [codefieber.de](https://www.codefieber.de/it-sicherheit/sicherungsarten-und-backupverfahren-1804) - Sicherungsarten und Backupverfahren
 - [chip.de](https://praxistipps.chip.de/software-oder-hardware-raid-wo-liegt-der-unterschied_28803) - Hardware- vs. Software RAID
+- [youtube.com](https://www.youtube.com/watch?v=kDEX1HXybrU) - Was ist eine Firewall?
+- [Wikipedia.org](https://de.wikipedia.org/wiki/OSI-Modell) - OSI-Modell
 
-## Wiederholung Network Layer (nicht SA relevant!)
+## Wiederholung Backups
 
-![Network Layer](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/network-layer.png)
+= Die Sicherung aller Daten auf ein **externes** Medium.
+
+### Full Backup
+
+Sicherung aller Daten auf ein externes Medium.
+
+### Inkrementelles Backup
+
+Zunächst Full-Bakup.  
+Anschließend werden nur noch **die Änderungen zum Letzten Backup** gesichert.
+
+### Differentielles Backup
+
+Zunächst Full-Bakup.  
+Anschließend werden nur noch **die Änderungen zum Letzten Full-Backup** gesichert.
+
+![Alt text](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/backups.png)
+
+## Wiederholung OSI-Modell
+
+![Network Layer](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/osi-modell.png)
+
+## Wiederholung TCP-Handshake
+
+![TCP-Handshake](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/tcp-handshake.png)
