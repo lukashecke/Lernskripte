@@ -216,7 +216,7 @@ Anschließend werden nur noch **die Änderungen zum Letzten Full-Backup** gesich
 
 ## Wiederholung OSI-Modell
 
-![Network Layer](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/osi-modell.png)
+![OSI-Modell](https://github.com/lukashecke/Lernskripte/blob/master/_Assets/osi-model.png)
 
 ## Wiederholung TCP-Handshake
 
